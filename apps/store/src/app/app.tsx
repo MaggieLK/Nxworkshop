@@ -9,6 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { Header } from '@bg-hoard/store/ui-shared';
+import { formatRating } from '@bg-hoard/store/util-formatters';
 
 
 export const App = () => {
@@ -38,7 +39,7 @@ export const App = () => {
                   component="p"
                   className={styles['game-rating']}
                 >
-                  <strong>Rating:</strong> {x.rating}
+                  <strong>Rating:</strong> {formatRating(x.rating)}
                 </Typography>
               </CardContent>
             </CardActionArea>
