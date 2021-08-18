@@ -1,4 +1,5 @@
 import { Game } from '@bg-hoard/util-interface';
+
 const games: Game[] = [
   {
     id: 'settlers-in-the-can',

@@ -1,5 +1,25 @@
 {
   "version": 2,
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "defaultProject": "api",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
+    }
+  },
   "projects": {
     "api": {
       "root": "apps/api",
@@ -51,6 +71,27 @@
         }
       }
     },
+    "api-util-notifications": {
+      "root": "libs/api/util-notifications",
+      "sourceRoot": "libs/api/util-notifications/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/util-notifications/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api/util-notifications"],
+          "options": {
+            "jestConfig": "libs/api/util-notifications/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "store": {
       "root": "apps/store",
       "sourceRoot": "apps/store/src",
@@ -88,8 +129,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 }
               ]
             }
@@ -99,13 +140,11 @@
           "executor": "@nrwl/web:dev-server",
           "options": {
             "buildTarget": "store:build",
-            "hmr": true,
             "proxyConfig": "apps/store/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "buildTarget": "store:build:production",
-              "hmr": false
+              "buildTarget": "store:build:production"
             }
           }
         },
@@ -192,6 +231,63 @@
             "jestConfig": "libs/store/ui-shared/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/store/ui-shared/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/store-ui-shared",
+            "config": {
+              "configFolder": "libs/store/ui-shared/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "store-ui-shared-e2e": {
+      "root": "apps/store-ui-shared-e2e",
+      "sourceRoot": "apps/store-ui-shared-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/store-ui-shared-e2e/cypress.json",
+            "tsConfig": "apps/store-ui-shared-e2e/tsconfig.e2e.json",
+            "devServerTarget": "store-ui-shared:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "store-ui-shared:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/store-ui-shared-e2e/**/*.{js,ts}"]
+          }
         }
       }
     },
@@ -237,25 +333,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/react"
-  },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "style": "scss",
-        "linter": "eslint",
-        "babel": true
-      },
-      "component": {
-        "style": "scss"
-      },
-      "library": {
-        "style": "scss",
-        "linter": "eslint"
-      }
-    }
-  },
-  "defaultProject": "store"
+  }
 }
